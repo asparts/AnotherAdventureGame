@@ -16,9 +16,15 @@ public class Player extends Entity{
 	GamePanel gamePanel;
 	KeyHandler keyHandler;
 	
+	public final int screenX;
+	public final int screenY;
+	
 	public Player(GamePanel gamePanel, KeyHandler keyHandler) {
 		this.gamePanel = gamePanel;
 		this.keyHandler = keyHandler;
+		
+		screenX = gamePanel.screenWidth/2 -(gamePanel.tileSize/2); //To center player on the screen -> we're gonna scroll the background as player moves
+		screenY = gamePanel.screenHeight/2-(gamePanel.tileSize/2);
 		
 		this.setDefaultValues();
 		this.getPlayerImage();
@@ -26,8 +32,8 @@ public class Player extends Entity{
 	
 	public void setDefaultValues() {
 		
-		this.x = 100;
-		this.y = 100;
+		this.worldX = gamePanel.tileSize * 23; //Players position on world map
+		this.worldY = gamePanel.tileSize * 21;
 		this.speed = 4;
 		direction ="down";
 		
@@ -58,19 +64,19 @@ public class Player extends Entity{
 		//If above is basically for that we're going to make player walk only if key is being pressed
 		if(keyHandler.upPressed == true) {
 			direction = "up";
-			this.y -= this.speed;
+			this.worldY -= this.speed;
 		}
 		else if(keyHandler.downPressed == true) {
 			direction = "down";
-			this.y += this.speed;
+			this.worldY += this.speed;
 		}
 		else if(keyHandler.leftPressed == true) {
 			direction = "left";
-			this.x -= this.speed;
+			this.worldX -= this.speed;
 		}
 		else if(keyHandler.rightPressed == true) {
 			direction = "right";
-			this.x += this.speed;
+			this.worldX += this.speed;
 		}
 		
 		//Down here, we're calling this 60 per second. --> increasing spritecounter --> changing image every 12 frames to make things smoother
@@ -128,7 +134,7 @@ public class Player extends Entity{
 			break;
 		
 		}
-		graphics2D.drawImage(image, x, y, this.gamePanel.tileSize, this.gamePanel.tileSize, null);
+		graphics2D.drawImage(image, screenX, screenY, this.gamePanel.tileSize, this.gamePanel.tileSize, null);
 		
 	}
 }

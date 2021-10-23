@@ -21,11 +21,11 @@ public class TileManager {
 		
 		this.gamePanel = gamePanel;
 		tile = new Tile[10];
-		mapTileNumber = new int[gamePanel.maxScreenCol][gamePanel.maxScreenRow];
+		mapTileNumber = new int[gamePanel.maxWorldCol][gamePanel.maxWorldRow];
 		
 		
 		getTileImage();
-		loadMap();
+		loadMap("/maps/world01map.txt");
 	}
 	
 	public void getTileImage() {
@@ -40,25 +40,35 @@ public class TileManager {
 			tile[2] = new Tile();
 			tile[2].tileImage = ImageIO.read(getClass().getResourceAsStream("/tiles/water.png"));
 			
+			tile[3] = new Tile();
+			tile[3].tileImage = ImageIO.read(getClass().getResourceAsStream("/tiles/sand.png"));
+			
+			tile[4] = new Tile();
+			tile[4].tileImage = ImageIO.read(getClass().getResourceAsStream("/tiles/tree_dark_w_bg.png"));
+			
+			tile[5] = new Tile();
+			tile[5].tileImage = ImageIO.read(getClass().getResourceAsStream("/tiles/ground.png"));
+			
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void loadMap() {
+	public void loadMap(String mapPath) {
 		try {
 			
-			InputStream inputStream = getClass().getResourceAsStream("/maps/tilemap1.txt");
+			InputStream inputStream = getClass().getResourceAsStream(mapPath);
 			BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 			
 			int col = 0;
 			int row = 0;
 			
-			while(col < gamePanel.maxScreenCol && row < gamePanel.maxScreenRow) {
+			while(col < gamePanel.maxWorldCol && row < gamePanel.maxWorldRow) {
 				
 				String line = br.readLine();
-				
-				while(col < gamePanel.maxScreenCol) {
+				System.out.println("col " + col);
+				System.out.println("row " + row);
+				while(col < gamePanel.maxWorldCol) {
 					
 					String numbers[] = line.split(" ");
 					
@@ -68,7 +78,8 @@ public class TileManager {
 					col++;
 					
 				}
-				if(col == gamePanel.maxScreenCol) {
+				if(col == gamePanel.maxWorldCol) {
+					System.out.println("col2 " + col);
 					col = 0;
 					row++;
 				}
@@ -83,24 +94,27 @@ public class TileManager {
 	
 	public void draw(Graphics2D g2) {
 
-		int col = 0;
-		int row = 0;
-		int x = 0;
-		int y = 0;
+		int worldCol = 0;
+		int worldRow = 0;
 		
-		while(col < gamePanel.maxScreenCol && row < gamePanel.maxScreenRow) {
+		while(worldCol < gamePanel.maxWorldCol && worldRow < gamePanel.maxWorldRow) {
 			
-			int tileNumber = mapTileNumber[col][row];
-			g2.drawImage(tile[tileNumber].tileImage, x, y, gamePanel.tileSize, gamePanel.tileSize, null);
-			col++;
+			int tileNumber = mapTileNumber[worldCol][worldRow];
 			
-			x+= gamePanel.tileSize;
+			//System.out.println("tilen" + tileNumber + "mtn " + mapTileNumber[worldCol][worldRow]);
 			
-			if(col == gamePanel.maxScreenCol) {
-				col = 0;
-				x = 0;
-				row++;
-				y += gamePanel.tileSize;
+			int worldX = worldCol * gamePanel.tileSize; // first checking tiles of world01map... WorldX = position of map and ScreenX = where to draw it on the map -> I.E. if player is on 100x100 tile, tile 0-0 is 100x100 from the player, and if we move we have to ofc draw(/scale) this shit again to make it look like camera 
+			int worldY = worldRow * gamePanel.tileSize;
+			int screenX = worldX - gamePanel.player.worldX+250 + gamePanel.player.screenX; //players position is always on the center on the screen -> 0-0 tile is really in different place since it's outside of our game window, so we need to do some offsetting.
+			int screenY = worldY - gamePanel.player.worldY+250 + gamePanel.player.screenY;
+			
+			g2.drawImage(tile[tileNumber].tileImage, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);
+			worldCol++;
+			
+			
+			if(worldCol == gamePanel.maxWorldCol) {
+				worldCol = 0;
+				worldRow++;
 			}
 			
 		}
