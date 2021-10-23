@@ -105,10 +105,17 @@ public class TileManager {
 			
 			int worldX = worldCol * gamePanel.tileSize; // first checking tiles of world01map... WorldX = position of map and ScreenX = where to draw it on the map -> I.E. if player is on 100x100 tile, tile 0-0 is 100x100 from the player, and if we move we have to ofc draw(/scale) this shit again to make it look like camera 
 			int worldY = worldRow * gamePanel.tileSize;
-			int screenX = worldX - gamePanel.player.worldX+250 + gamePanel.player.screenX; //players position is always on the center on the screen -> 0-0 tile is really in different place since it's outside of our game window, so we need to do some offsetting.
-			int screenY = worldY - gamePanel.player.worldY+250 + gamePanel.player.screenY;
+			int screenX = worldX - gamePanel.player.worldX + gamePanel.player.screenX; //players position is always on the center on the screen -> 0-0 tile is really in different place since it's outside of our game window, so we need to do some offsetting.
+			int screenY = worldY - gamePanel.player.worldY + gamePanel.player.screenY;
 			
-			g2.drawImage(tile[tileNumber].tileImage, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);
+			//Drawing images while we move to render with better performance
+			if(worldX + gamePanel.tileSize > gamePanel.player.worldX - gamePanel.player.screenX && 
+				worldX - gamePanel.tileSize < gamePanel.player.worldX + gamePanel.player.screenX &&
+				worldY + gamePanel.tileSize > gamePanel.player.worldY - gamePanel.player.screenY &&
+				worldY - gamePanel.tileSize < gamePanel.player.worldY + gamePanel.player.screenY) {
+				g2.drawImage(tile[tileNumber].tileImage, screenX, screenY, gamePanel.tileSize, gamePanel.tileSize, null);
+			}
+			
 			worldCol++;
 			
 			
