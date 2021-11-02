@@ -2,6 +2,7 @@ package entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -26,8 +27,14 @@ public class Player extends Entity{
 		screenX = gamePanel.screenWidth/2 -(gamePanel.tileSize/2); //To center player on the screen -> we're gonna scroll the background as player moves
 		screenY = gamePanel.screenHeight/2-(gamePanel.tileSize/2);
 		
+		
+		solidArea = new Rectangle(0, 0, gamePanel.tileSize-(int)(gamePanel.tileSize*0.3), gamePanel.tileSize-(int)(gamePanel.tileSize*0.3));
+		
 		this.setDefaultValues();
 		this.getPlayerImage();
+		
+		
+		
 	}
 	
 	public void setDefaultValues() {
@@ -64,19 +71,40 @@ public class Player extends Entity{
 		//If above is basically for that we're going to make player walk only if key is being pressed
 		if(keyHandler.upPressed == true) {
 			direction = "up";
-			this.worldY -= this.speed;
+			
 		}
 		else if(keyHandler.downPressed == true) {
 			direction = "down";
-			this.worldY += this.speed;
+			
 		}
 		else if(keyHandler.leftPressed == true) {
 			direction = "left";
-			this.worldX -= this.speed;
+			
 		}
 		else if(keyHandler.rightPressed == true) {
 			direction = "right";
-			this.worldX += this.speed;
+			
+		}
+		
+		//CHECK TILE COLLISION
+		collisionOn = false;
+		gamePanel.collisionChecker.CheckTile(this);
+		//IF TILE COLLISION IS FALSE, PLAYER CAN MOVE
+		if(collisionOn == false) {
+			switch(direction) {
+			case "up":
+				this.worldY -= this.speed;
+				break;
+			case "down":
+				this.worldY += this.speed;
+				break;
+			case "left":
+				this.worldX -= this.speed;
+				break;
+			case "right":
+				this.worldX += this.speed;
+				break;
+			}
 		}
 		
 		//Down here, we're calling this 60 per second. --> increasing spritecounter --> changing image every 12 frames to make things smoother
