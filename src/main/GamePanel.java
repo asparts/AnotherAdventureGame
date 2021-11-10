@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
 import entity.Player;
+import object.SuperObject;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -38,6 +39,10 @@ public class GamePanel extends JPanel implements Runnable{
 	TileManager tileManager = new TileManager(this);
 	
 	public CollisionChecker collisionChecker = new CollisionChecker(this);
+	public AssetHandler assetHandler = new AssetHandler(this);
+	//OBJECTS
+	public SuperObject objects[] = new SuperObject[10];
+	
 	
 	
 	public GamePanel() {
@@ -49,6 +54,11 @@ public class GamePanel extends JPanel implements Runnable{
 		this.setFocusable(true);
 	}
 
+	public void setObjects() {
+		
+		assetHandler.setObject();
+		
+	}
 	
 	public void startGameThread() {
 		
@@ -97,7 +107,17 @@ public class GamePanel extends JPanel implements Runnable{
 		Graphics2D graphics2D = (Graphics2D)graphics;
 		
 		tileManager.draw(graphics2D); // Gotta draw tiles first and player last since if opposite player will be hidden behind the tiles
+		
+		//OBJECT
+		for(int i = 0; i < objects.length; i++) {
+			if(objects[i] != null) {
+				objects[i].draw(graphics2D, this);
+			}
+		}
+		
 		player.draw(graphics2D);
+		
+		
 		
 		graphics2D.dispose(); // dispose shit to save memory
 		
