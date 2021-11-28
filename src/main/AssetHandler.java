@@ -1,5 +1,6 @@
 package main;
 
+import object.OBJ_Boots;
 import object.OBJ_Chest;
 import object.OBJ_Door;
 import object.OBJ_Key;
@@ -30,6 +31,10 @@ public class AssetHandler {
 		this.gamePanel.objects[3] = new OBJ_Door();
 		this.gamePanel.objects[3].worldX = 15 * gamePanel.tileSize;
 		this.gamePanel.objects[3].worldY = 9 * gamePanel.tileSize;
+		
+		this.gamePanel.objects[4] = new OBJ_Boots();
+		this.gamePanel.objects[4].worldX = 16 * gamePanel.tileSize;
+		this.gamePanel.objects[4].worldY = 9 * gamePanel.tileSize;
 		
 	}
 	

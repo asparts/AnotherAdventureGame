@@ -27,12 +27,10 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	public final int maxWorldCol = 50;
 	public final int maxWorldRow = 50;
-	public final int worldWidth = tileSize * maxWorldCol;
-	public final int worldHeight = tileSize * maxWorldRow;
 	
-	
+	//SYSTEM
 	int FPS = 60;
-	
+	Sound sound = new Sound();
 	KeyHandler keyHandler = new KeyHandler();
 	Thread gameThread;
 	public Player player = new Player(this, keyHandler);
@@ -57,6 +55,8 @@ public class GamePanel extends JPanel implements Runnable{
 	public void setObjects() {
 		
 		assetHandler.setObject();
+		
+		playMusic(5);
 		
 	}
 	
@@ -121,5 +121,22 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		graphics2D.dispose(); // dispose shit to save memory
 		
+	}
+	
+	public void playMusic(int i) {
+		
+		sound.setFile(i);
+		sound.play();
+		sound.loop();
+		
+	}
+	public void stopMusic() {
+		
+		sound.stop();
+	}
+	public void playSoundEffect(int i) {
+		
+		sound.setFile(i);
+		sound.play();
 	}
 }
