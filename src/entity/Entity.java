@@ -18,6 +18,9 @@ public class Entity {
 	public int spriteNumber = 1;
 	
 	public Rectangle solidArea; //creating invisible rectangle to store data
+	public int solidAreaDefaultX, solidAreaDefaultY;
+	
+	
 	public boolean collisionOn = false;
 	
 	
